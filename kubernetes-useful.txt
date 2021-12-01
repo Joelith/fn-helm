@@ -1,0 +1,72 @@
+# kubectl delete --all deployments --all-namespaces
+# kubectl delete --all pods --all-namespaces
+# kubectl delete all --all
+
+kubectl delete all --all --all-namespaces
+
+kubectl get svc
+
+Install ingress
+https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
+
+Install cert-manager:
+https://cert-manager.io/docs/installation/
+
+
+https://artifacthub.io/packages/helm/cert-manager/cert-manager
+
+-- list all versions of kubenetes stuff
+ for kind in `kubectl api-resources | tail +2 | awk '{ print $1 }'`; do kubectl explain $kind; done | grep -e "KIND:" -e "VERSION:"
+
+
+ https://cert-manager.io/docs/configuration/acme/
+
+
+ If helm install doesnt work then use:
+ https://cert-manager.io/docs/installation/kubectl/
+
+Install ingress
+ https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+
+ apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: example
+    namespace: foo
+  spec:
+    ingressClassName: nginx
+    rules:
+      - host: www.example.com
+        http:
+          paths:
+            - backend:
+                service:
+                  name: exampleService
+                  port:
+                    number: 80
+              path: /
+    # This section is only required if TLS is to be enabled for the Ingress
+    tls:
+      - hosts:
+        - www.example.com
+        secretName: example-tls
+
+If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
+
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: example-tls
+    namespace: foo
+  data:
+    tls.crt: <base64 encoded cert>
+    tls.key: <base64 encoded key>
+  type: kubernetes.io/tls
+
+
+
+
+
+
+  For minikube you ```minikube tunnel``` to get ingress to work

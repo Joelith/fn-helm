@@ -1,6 +1,7 @@
 name: fn
 version: 0.1.0
 appVersion: 0.0.161
+apiVersion: v1
 description: Open source container native Functions as a Service (FaaS) platform
 keywords:
 - faas

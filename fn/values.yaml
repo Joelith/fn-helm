@@ -6,20 +6,32 @@ nameOverride: ''
 
 ## Ingress configuration.
 ## ref: https://kubernetes.io/docs/user-guide/ingress/
+# ingress:
+#   enabled: true
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+# #    certmanager.k8s.io/cluster-issuer: letsencrypt-staging
+# #    kubernetes.io/tls-acme: “true”
+
+# # secret refernce is a k8s secret to your
+# tls:
+#   enabled: false
+#   default_issuer_name: letsencrypt-staging
+#   acme_registration_email: <your@email.com>
+# #  secret_reference: fn-tls
+#   server: https://acme-staging.api.letsencrypt.org/directory
+
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-#    certmanager.k8s.io/cluster-issuer: letsencrypt-staging
-#    kubernetes.io/tls-acme: “true”
-
-# secret refernce is a k8s secret to your
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
 tls:
   enabled: false
-  default_issuer_name: letsencrypt-staging
-  acme_registration_email: <your@email.com>
-#  secret_reference: fn-tls
-  server: https://acme-staging-v02.api.letsencrypt.org/directory
+  default_issuer_name: letsencrypt-prd
+  acme_registration_email: matthew.wmitchell101@gmail.com
+  secret_reference: fn-tls
+  server: https://acme-v02.api.letsencrypt.org/directory
 
 
 # Fn runner deployment definition
@@ -61,7 +73,7 @@ fn_lb_runner:
   grpc_port: 9191
   service:
     port: 90 # Fn runner LB service port to expose
-    type: ClusterIP
+    type: LoadBalancer
     annotations: {}
     ingress_hostname: lb.fn.internal # Ingress controller routing host, can be random URL host.
   env:
@@ -82,7 +94,7 @@ fn_api:
   container_port: 80 # Fn API container port
   service:
     port: 80 # Fn API service port to expose
-    type: ClusterIP
+    type: LoadBalancer
     annotations: {}
     ingress_hostname: api.fn.internal
   env:
@@ -104,7 +116,7 @@ ui:
         cpu: "300m"
   service:
     port: 3000
-    type: ClusterIP
+    type: LoadBalancer
     annotations: {}
     ingress_hostname: ui.fn.internal
 

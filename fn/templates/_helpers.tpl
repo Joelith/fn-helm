@@ -35,3 +35,30 @@ Assemble the public load balancer URL.
 {{- define "fn.public_lb_url" -}}
 {{- printf "%s.%s:%.0f" .Release.Name .Values.fn_lb_runner.service.ingress_hostname .Values.fn_lb_runner.service.port }}
 {{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "fn.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "fn.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "fn.labels" -}}
+helm.sh/chart: {{ include "fn.chart" . }}
+{{ include "fn.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
