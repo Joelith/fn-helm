@@ -18,11 +18,11 @@ spec:
   tls:
     - secretName: {{ .Values.tls.secret_reference }}
       hosts:
-        - {{ .Values.fn_api.service.ingress_hostname }}
-        - {{ .Values.fn_lb_runner.service.ingress_hostname }}
+        - {{ .Release.Name }}.{{ .Values.fn_api.service.ingress_hostname }}
+        - {{ .Release.Name }}.{{ .Values.fn_lb_runner.service.ingress_hostname }}
   {{- end }}
   rules:
-    - host: {{ .Values.fn_api.service.ingress_hostname }}
+    - host: {{ .Release.Name }}.{{ .Values.fn_api.service.ingress_hostname }}
       http:
         paths:
         - pathType: ImplementationSpecific
@@ -32,7 +32,7 @@ spec:
               name: {{ template "fullname" . }}-api
               port: 
                 number: {{ .Values.fn_api.service.port }}
-    - host: {{ .Values.fn_lb_runner.service.ingress_hostname }}
+    - host: {{ .Release.Name }}.{{ .Values.fn_lb_runner.service.ingress_hostname }}
       http:
         paths:
         - pathType: ImplementationSpecific
@@ -42,7 +42,7 @@ spec:
               name: {{ template "fullname" . }}-lb
               port: 
                 number: {{ .Values.fn_lb_runner.service.port }}
-    - host: {{ .Values.ui.service.ingress_hostname }}
+    - host: {{ .Release.Name }}.{{ .Values.ui.service.ingress_hostname }}
       http:
         paths:
         - pathType: ImplementationSpecific
@@ -52,7 +52,7 @@ spec:
               name: {{ template "fullname" . }}-ui
               port: 
                 number: {{ .Values.ui.service.port }}
-    - host: {{ .Values.flow.service.ingress_hostname }}
+    - host: {{ .Release.Name }}.{{ .Values.flow.service.ingress_hostname }}
       http:
         paths:
         - pathType: ImplementationSpecific
