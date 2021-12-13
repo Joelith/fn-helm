@@ -10,18 +10,16 @@ This chart deploys a fully functioning instance of the [Fn](https://github.com/f
 
 - persistent volume provisioning support in the underlying infrastructure (for persistent data, see below )
 
-- Install [Helm](https://github.com/kubernetes/helm#install)
+- Install [Helm](https://github.com/kubernetes/helm#install) V3
 
-- Initialize Helm by installing Tiller, the server portion of Helm, to your Kubernetes cluster
-
-- [Ingress controller](https://github.com/helm/charts/tree/master/stable/nginx-ingress)
+- [Ingress controller](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/): recommend to install under the name <release-name> i.e. `helm install <release name> nginx-stable/nginx-ingress`
+- For local deployment with Minikube, do **not** install above Ingress Controll and Instead:
+* Run: 
+ * `minikube addons enable ingress`
+ * `minikube addons enable ingress-dns`
 
 - [Cert manager](https://medium.com/oracledevs/secure-your-kubernetes-services-using-cert-manager-nginx-ingress-and-lets-encrypt-888c8b996260)
 
-
-```bash
-helm init --upgrade
-```
 
 ## Preparing chart values
 
@@ -46,16 +44,17 @@ curl -x http://<ingress-controller-endpoint>:80 api.fn.internal
 
 #### LoadBalancer
 
-In order to natively expose the Fn services, you'll need to modify the Fn API, Runner, and UI service definitions:
+In order to natively expose the Fn services, you'll need to **keep** the Fn API, Runner, and UI service definitions as specified:
 
- - at `fn_api` node values, modify `fn_api.service.type` from `ClusterIP` to `LoadBalancer`
- - at `fn_lb_runner` node values, modify `fn_lb_runner.service.type` from `ClusterIP` to `LoadBalancer`
- - at `ui` node values, modify `ui.service.type` from `ClusterIP` to `LoadBalancer`
+ - at `fn_api` node values, modify `fn_api.service.type` as `LoadBalancer`
+ - at `fn_lb_runner` node values, modify `fn_lb_runner.service.type` as `LoadBalancer`
+ - at `ui` node values, modify `ui.service.type` as `LoadBalancer`
 
+ Otherwise set these back to `ClusterIP`.
 
 #### DNS names
 
-In an Fn deployment with LoadBalancer service types, you'll need 3 DNS names:
+In an Fn deployment with LoadBalancer service types, you'll need 3 DNS names, that can be set in fn/values.yaml under the respective ingress_hostname item:
 
  - one for an API service (i.e., `api.fn.mydomain.com`)
  - one for runner LB service (i.e., `lb.fn.mydomain.com`)
@@ -67,12 +66,18 @@ You'll have two IP addresses, but three DNS names.
 
 Please keep in mind the best way for exposing services is an **ingress controller**.
 
+For local deployment i.e. minikube, you will need to add each of the three DNS names to your /etc/hosts file. For example:
+
+<cluster ip address> fn-release.ui
+
+With minikube, you can get the cluster ip address via ``` minikube ip```.
+
 ## Installing the Chart
 
 Clone the fn-helm repo:
 
 ```bash
-git clone https://github.com/fnproject/fn-helm.git && cd fn-helm
+git clone https://github.com/Joelith/fn-helm && cd fn-helm
 ```
 
 Install chart dependencies from [requirements.yaml](./fn/requirements.yaml):
@@ -85,10 +90,8 @@ The default chart will install fn as a private service inside your cluster with 
 To install the chart with the release name `my-release`:
 
 ```bash
-helm install --name my-release fn
+helm install <release name> fn --debug
 ```
-
-> Note: if you do not pass the --name flag, a release name will be auto-generated. You can view releases by running helm list (or helm ls, for short).
 
 ## Working with Fn 
 

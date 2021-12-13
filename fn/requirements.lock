@@ -1,9 +1,9 @@
 dependencies:
 - name: mysql
   repository: https://charts.helm.sh/stable
-  version: 0.3.0
+  version: 1.6.9
 - name: redis
   repository: https://charts.helm.sh/stable
-  version: 1.0.4
-digest: sha256:3970b2783cc8b17e31cda4afa42cb7ff045ada795a02524248d7aae60744107e
-generated: "2021-11-23T00:17:26.3127236+11:00"
+  version: 10.5.7
+digest: sha256:5b5c264d12910c0109a23fb9bda9c30fe8150eede62c9530cec5704f6580fc3d
+generated: "2021-12-02T00:19:10.3236068+11:00"

@@ -75,7 +75,7 @@ fn_lb_runner:
     port: 90 # Fn runner LB service port to expose
     type: LoadBalancer
     annotations: {}
-    ingress_hostname: lb.fn.internal # Ingress controller routing host, can be random URL host.
+    ingress_hostname: lb # Ingress controller routing host, can be random URL host.
   env:
     FN_LOG_LEVEL: INFO
 
@@ -96,7 +96,7 @@ fn_api:
     port: 80 # Fn API service port to expose
     type: LoadBalancer
     annotations: {}
-    ingress_hostname: api.fn.internal
+    ingress_hostname: api
   env:
     FN_DB_URL: mysql://fnapp:$(FN_DB_PASSWD)@tcp($(FN_DB_HOST):3306)/fndb
     FN_MQ_URL: redis://$(FN_MQ_HOST):6379/
@@ -118,7 +118,7 @@ ui:
     port: 3000
     type: LoadBalancer
     annotations: {}
-    ingress_hostname: ui.fn.internal
+    ingress_hostname: ui
 
 flow:
   image: fnproject/flow
@@ -128,7 +128,7 @@ flow:
     port: 80
     type: ClusterIP
     annotations: {}
-    ingress_hostname: flow.fn.internal
+    ingress_hostname: flow
   resources: # K8s computation resources
     requests:
       memory: "1Gi"
