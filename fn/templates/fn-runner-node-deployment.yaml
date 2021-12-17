@@ -31,15 +31,15 @@ spec:
 {{- end }}
       containers:
         - name: runner
+          volumeMounts:
+            - name: docker-graph-storage
+              mountPath: /var/lib/docker
           image: {{ .Values.fn_runner.image }}:{{ .Values.fn_runner.tag }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           resources:
 {{ toYaml .Values.fn_runner.resources | indent 12 }}
           securityContext:
             privileged: true
-          volumeMounts:
-            - name: docker-graph-storage
-              mountPath: /var/lib/docker
           ports:
             - containerPort: {{ .Values.fn_runner.grpc_port }}
           env:
@@ -54,7 +54,7 @@ spec:
             {{- end }}
           {{- end }}
             - name: DOCKER_HOST
-              value: tcp://0.0.0.0:2375
+              value: unix://var/run/docker.sock
       volumes:
         - name: docker-graph-storage
           emptyDir: {}
