@@ -83,6 +83,7 @@ git clone https://github.com/Joelith/fn-helm && cd fn-helm
 Install chart dependencies from [requirements.yaml](./fn/requirements.yaml):
 
 ```bash
+helm add stable https://charts.helm.sh/stable
 helm dep build fn
 ```
 
